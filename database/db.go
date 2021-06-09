@@ -12,7 +12,7 @@ import (
 func DBconnection() *gorm.DB {
 	var users model.Users
 
-	dsn := "priyanka:piya19117@tcp(127.0.0.1:3306)/sqldata"
+	dsn := "admin:password@tcp(127.0.0.1:3306)/sqldata"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Print(err)
