@@ -10,7 +10,7 @@ import (
 
 //DBconnection ...
 func DBconnection() *gorm.DB {
-	var book model.Users
+	var users model.Users
 
 	dsn := "priyanka:piya19117@tcp(127.0.0.1:3306)/sqldata"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -19,6 +19,6 @@ func DBconnection() *gorm.DB {
 	} else {
 		fmt.Print("connected")
 	}
-	db.AutoMigrate(&book)
+	db.AutoMigrate(&users)
 	return db
 }
