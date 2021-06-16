@@ -1,7 +1,6 @@
 package database
 
 import (
-	"api/model"
 	"fmt"
 
 	"gorm.io/driver/mysql"
@@ -10,7 +9,7 @@ import (
 
 //DBconnection ...
 func DBconnection() *gorm.DB {
-	var users model.Users
+	//var users model.Users
 
 	dsn := "priyanka:piya19117@tcp(127.0.0.1:3306)/Data"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -19,6 +18,6 @@ func DBconnection() *gorm.DB {
 	} else {
 		fmt.Println("connected")
 	}
-	db.AutoMigrate(&users)
+	//db.AutoMigrate(&users)
 	return db
 }
