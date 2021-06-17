@@ -44,24 +44,28 @@ func ShowusersService() []model.Users {
 
 }
 
-//Showuser ...
+//ShowuserService ...
 func ShowuserService(id string) model.Users {
 	userid := id
+	if userid == "" {
+		fmt.Println("invalid ID")
+	}
 	db := database.DBconnection()
 	var userData model.Users
-	db.Find(&userData, userid)
+	db.First(&userData, userid)
+
 	return userData
 }
 
 //Create ...
-func CreateService(newUser *model.Users) model.Users {
+func CreateService(newUser model.Users) model.Users {
 
 	db := database.DBconnection()
 
 	newUser.Password = pwd(newUser.Password)
 
 	db.Create(&newUser)
-	return *newUser
+	return newUser
 
 }
 func LoginService(user model.Users) string {
@@ -69,9 +73,8 @@ func LoginService(user model.Users) string {
 
 	var data model.Users
 	Email := user.Email
+	println(Email)
 	db.Where("email = ?", Email).Find(&data)
-	fmt.Println(user.Email)
-	fmt.Println(data.Email)
 	if data.Email == "" {
 
 		return "No user Found with Email"
@@ -94,7 +97,7 @@ func UpdateService(id string, user model.Users) string {
 	}
 	db.Model(&data).Updates(model.Users{Name: user.Name, Email: user.Email})
 
-	return " user successfully updated"
+	return "user successfully updated"
 }
 
 //Delete ...

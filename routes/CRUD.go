@@ -1,8 +1,9 @@
 package routes
 
 import (
+	"api/model"
 	"api/services"
-"api/model"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -15,8 +16,14 @@ func Showusers(c *fiber.Ctx) error {
 }
 
 func Showuser(c *fiber.Ctx) error {
-	id:=c.Params("id")
+	id := c.Params("id")
+	if id == "" {
+		return c.SendString("invalid id")
+	}
 	result := services.ShowuserService(id)
+	if result.Name == "" {
+		return c.SendString("no user found for this ID")
+	}
 	return c.JSON(result)
 
 }
@@ -27,7 +34,7 @@ func Create(c *fiber.Ctx) error {
 		c.Status(503).SendString("error")
 
 	}
-	result := services.CreateService(newUser)
+	result := services.CreateService(*newUser)
 	return c.JSON(result)
 
 }
@@ -41,7 +48,7 @@ func Update(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user := new(model.Users)
 	c.BodyParser(user)
-	result := services.UpdateService(id,*user)
+	result := services.UpdateService(id, *user)
 	return c.JSON(result)
 
 }
