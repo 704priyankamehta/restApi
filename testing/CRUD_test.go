@@ -15,7 +15,7 @@ func TestCreate(t *testing.T) {
 	user.ID = 1
 
 	result := services.CreateService(user)
-	if result.Name == "" {
+	if result != "registered successfully" {
 		t.Error("invalid data")
 	} else {
 		t.Log("registered")

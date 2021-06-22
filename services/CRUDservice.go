@@ -1,7 +1,7 @@
 package services
 
 import (
-	"api/database"
+	database "api/database"
 	"api/model"
 	"fmt"
 
@@ -37,9 +37,9 @@ func comparePass(hashedPwd string, plainPwd []byte) bool {
 
 //Showusers ...
 func ShowusersService() []model.Users {
-	db := database.DBconnection()
 	var usersData []model.Users
-	db.Find(&usersData)
+	sql := "SELECT id,name,email FROM USERS"
+	database.DBcon.Raw(sql).Scan(&usersData)
 	return usersData
 
 }
@@ -50,31 +50,31 @@ func ShowuserService(id string) model.Users {
 	if userid == "" {
 		fmt.Println("invalid ID")
 	}
-	db := database.DBconnection()
-	var userData model.Users
-	db.First(&userData, userid)
 
+	var userData model.Users
+	database.DBcon.Find(&userData, userid)
+	fmt.Println(userData)
 	return userData
 }
 
 //Create ...
-func CreateService(newUser model.Users) model.Users {
-
-	db := database.DBconnection()
+func CreateService(newUser model.Users) string {
 
 	newUser.Password = pwd(newUser.Password)
 
-	db.Create(&newUser)
-	return newUser
+	err := database.DBcon.Create(&newUser).Error
+	if err != nil {
+		return "Email/ID already exist"
+	}
+	return "registered successfully"
 
 }
 func LoginService(user model.Users) string {
-	db := database.DBconnection()
 
 	var data model.Users
 	Email := user.Email
 	println(Email)
-	db.Where("email = ?", Email).Find(&data)
+	database.DBcon.Where("email = ?", Email).Find(&data)
 	if data.Email == "" {
 
 		return "No user Found with Email"
@@ -88,14 +88,14 @@ func LoginService(user model.Users) string {
 
 //Update ...
 func UpdateService(id string, user model.Users) string {
-	db := database.DBconnection()
+
 	var data model.Users
-	db.First(&data, id)
+	database.DBcon.First(&data, id)
 	if data.Name == "" {
 
 		return "No user Found with ID"
 	}
-	db.Model(&data).Updates(model.Users{Name: user.Name, Email: user.Email})
+	database.DBcon.Model(&data).Updates(model.Users{Name: user.Name, Email: user.Email})
 
 	return "user successfully updated"
 }
@@ -103,14 +103,12 @@ func UpdateService(id string, user model.Users) string {
 //Delete ...
 func DeleteService(id string) string {
 
-	db := database.DBconnection()
-
 	var user model.Users
-	db.First(&user, id)
+	database.DBcon.First(&user, id)
 	if user.Name == "" {
 		return "No user Found with ID"
 
 	}
-	db.Delete(&user)
+	database.DBcon.Delete(&user)
 	return "Successfully deleted"
 }

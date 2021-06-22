@@ -40,7 +40,6 @@ type Temp struct {
 //inserting 500 data into temps table
 func go1(wg *sync.WaitGroup) {
 
-	db := database.DBconnection()
 	var data Temp
 
 	defer wg.Done()
@@ -86,7 +85,7 @@ func go1(wg *sync.WaitGroup) {
 			}
 
 		}
-		db.Create(data)
+		database.DBcon.Create(data)
 	}
 }
 
@@ -94,7 +93,6 @@ func go1(wg *sync.WaitGroup) {
 func go2(wg *sync.WaitGroup) {
 	var data Temp
 	defer wg.Done()
-	db := database.DBconnection()
 
 	f, err := excelize.OpenFile("sample.xlsx")
 	if err != nil {
@@ -139,14 +137,14 @@ func go2(wg *sync.WaitGroup) {
 			}
 
 		}
-		db.Create(data)
+		database.DBcon.Create(data)
 
 	}
 }
 
 //inserting 500 data into temps table
 func go3(ch chan string) {
-	db := database.DBconnection()
+
 	var data Temp
 	f, err := excelize.OpenFile(<-ch)
 	if err != nil {
@@ -190,7 +188,7 @@ func go3(ch chan string) {
 			}
 
 		}
-		db.Create(data)
+		database.DBcon.Create(data)
 	}
 }
 func go4(ch chan string) {

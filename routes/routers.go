@@ -5,11 +5,16 @@ import (
 )
 
 func Setroutes(app *fiber.App) {
-	app.Get("/showuser/:id", Showuser)
-	app.Post("/register", Create)
-	app.Get("/showusers", Showusers)
-	app.Delete("/delete/:id", Delete)
-	app.Put("/update/:id", Update)
+	app.Get("api/v1/showuser/:id", Showuser)
+
+	//register User
+	app.Post("api/v1/register", Create)
+
+	//paging paerpage 2
+	app.Get("api/v1/getusers", Getusers)
+	app.Get("api/v1/showusers", Showusers)
+	app.Delete("api/v1/delete/:id", Delete)
+	app.Put("api/v1/update/:id", Update)
 	//app.Post("/upload", services.Uploadfile)
 	//app.Post("mailer", services.Mail)
 	app.Get("/login", Login)

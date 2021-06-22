@@ -16,19 +16,22 @@ func getEnvvars() {
 	}
 }
 
+var DBcon *gorm.DB
+
 //DBconnection ...
-func DBconnection() *gorm.DB {
+func DBconnection() {
 	//var users model.Users
 	getEnvvars()
 	database := os.Getenv("DATABASE")
 
 	dsn := database
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	var err error
+	DBcon, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Print(err)
 	} else {
 		fmt.Println("connected")
 	}
 	//db.AutoMigrate(&users)
-	return db
+
 }
